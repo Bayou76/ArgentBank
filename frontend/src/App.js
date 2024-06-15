@@ -1,7 +1,24 @@
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
+import Home from "./pages/Home/Home";
+import Login from "./pages/Login/Login";
+import Profile from "./pages/Profile/Profile";
+import Error from "./pages/Error/Error.jsx"
+
 function App() {
   return (
     <div className="App">
-      <h1>Argent Bank</h1>
+      <React.StrictMode>
+			<Router>
+				<Routes>
+					<Route path="/" element={<Home />} />
+          <Route path="/ArgentBank" element={<Home />} />
+					<Route path="/login" element={<Login />} />
+					<Route path="/profile" element={<Profile />} />
+          <Route path="*" element={<Error />} />
+				</Routes>
+			</Router>
+		</React.StrictMode>
     </div>
   );
 }

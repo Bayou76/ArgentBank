@@ -1,15 +1,14 @@
 import Header from '../../components/Header/Header'
 import Footer from '../../components/Footer/Footer'
 
-
-function Login() {
+function Profile() {
 	return (
 		<div>
 			<Header />
-			<h1>Login</h1>
+			<h1>Profile</h1>
 			<Footer />
 		</div>
 	)
 }
 
-export default Login
+export default Profile
