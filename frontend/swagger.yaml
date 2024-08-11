@@ -1,0 +1,205 @@
+openapi: 3.0.3
+info:
+  title: Documentation de l'API Banque Argent
+  description: Contient tous les points d'accès API disponibles pour la gestion des transactions
+  version: '1.0.0'
+servers:
+  - url: http://localhost:3001/api/v1
+paths:
+  /transactions:
+    get:
+      security:
+        - BearerAuth: [] 
+      tags:
+        - Module Transaction
+      summary: Obtenir toutes les transactions du mois en cours groupées par compte
+      description: API pour obtenir toutes les transactions du mois en cours groupées par compte
+      parameters:
+        - name: month
+          in: query
+          required: true
+          description: Le mois au format YYYY-MM pour lequel les transactions doivent être récupérées
+          schema:
+            type: string
+            example: "2024-07"
+      responses:
+        '200':
+          description: Liste des transactions groupées par compte
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Requête invalide (données manquantes ou incorrectes)
+        '500':
+          description: Erreur interne du serveur
+
+    post:
+      security:
+        - BearerAuth: []
+      tags:
+        - Module Transaction
+      summary: Créer une nouvelle transaction
+      description: API pour créer une nouvelle transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionCreate'
+      responses:
+        '200':
+          description: Transaction créée avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Requête invalide (données manquantes ou incorrectes)
+        '500':
+          description: Erreur interne du serveur
+
+  /transactions/{id}:
+    get:
+      security:
+        - BearerAuth: []
+      tags:
+        - Module Transaction
+      summary: Obtenir les détails d'une transaction spécifique
+      description: API pour obtenir les détails d'une transaction spécifique
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la transaction
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Détails de la transaction
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Requête invalide (données manquantes ou incorrectes)
+        '500':
+          description: Erreur interne du serveur
+
+    put:
+      security:
+        - BearerAuth: []
+      tags:
+        - Module Transaction
+      summary: Mettre à jour une transaction existante
+      description: API pour mettre à jour une transaction existante
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la transaction
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionUpdate'
+      responses:
+        '200':
+          description: Transaction mise à jour avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Requête invalide (données manquantes ou incorrectes)
+        '500':
+          description: Erreur interne du serveur
+
+    delete:
+      security:
+        - BearerAuth: []
+      tags:
+        - Module Transaction
+      summary: Supprimer une transaction existante
+      description: API pour supprimer une transaction existante
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la transaction
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Transaction supprimée avec succès
+        '400':
+          description: Requête invalide (données manquantes ou incorrectes)
+        '500':
+          description: Erreur interne du serveur
+
+components:
+  schemas:
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID de la transaction
+        accountId:
+          type: string
+          description: ID du compte associé à la transaction
+        date:
+          type: string
+          format: date
+          description: Date de la transaction (format MM-YYYY)
+        amount:
+          type: number
+          description: Montant de la transaction
+        description:
+          type: string
+          description: Description de la transaction
+
+    TransactionCreate:
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: ID du compte associé à la transaction
+        date:
+          type: string
+          format: date
+          description: Date de la transaction (format JJ-MM-YYYY)
+        amount:
+          type: number
+          description: Montant de la transaction
+        description:
+          type: string
+          description: Description de la transaction
+      required:
+        - accountId
+        - date
+        - amount
+        - description
+
+    TransactionUpdate:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Montant de la transaction
+        description:
+          type: string
+          description: Description de la transaction
+      required:
+        - amount
+        - description
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
