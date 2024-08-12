@@ -5,7 +5,7 @@ import { loginSuccess } from '../../redux/reducers/authReducer';
 
 function ProfilHeader() {
     const user = useSelector((state) => state.auth.user);
-    const token = useSelector((state) => state.auth.token); // Assurez-vous que le token est disponible dans le state
+    const token = useSelector((state) => state.auth.token);
     const dispatch = useDispatch();
 
     // État local pour la gestion de l'édition du profil

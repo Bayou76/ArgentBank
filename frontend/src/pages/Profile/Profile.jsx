@@ -6,9 +6,9 @@ import ProfileHeader from '../../components/ProfilHeader/ProfilHeader';
 import ProfileMain from '../../components/ProfilMain/ProfileMain';
 
 function Profile() {
-    const user = useSelector((state) => state.auth.user); // Assurez-vous de bien utiliser le bon chemin
+    const user = useSelector((state) => state.auth.user); 
 
-    console.log('User from Redux state:', user); // Log the user object
+    console.log('User from Redux state:', user); 
 
     return (
         <div>
