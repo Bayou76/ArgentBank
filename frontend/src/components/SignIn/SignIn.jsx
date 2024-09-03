@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../redux/actions/authActions';
 import { isValidEmail, isValidPassword } from '../../utils/authRegex';
+import { loginSuccess } from '../../redux/reducers/authReducer';
 
 function SignIn() {
     const [email, setEmail] = useState('');
@@ -26,7 +27,8 @@ function SignIn() {
         }
 
         try {
-            await dispatch(login({ email, password, rememberMe }));
+            const userProfile = await dispatch(login({ email, password, rememberMe }));
+            dispatch(loginSuccess(userProfile));
             navigate('/profile');
         } catch (error) {
             console.error(error);

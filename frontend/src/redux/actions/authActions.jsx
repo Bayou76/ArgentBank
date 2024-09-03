@@ -1,4 +1,3 @@
-import { loginSuccess } from '../reducers/authReducer';
 
 // Fonction pour récupérer les informations utilisateur
 const fetchUserProfile = async (token) => {
@@ -18,7 +17,7 @@ const fetchUserProfile = async (token) => {
     }
 };
 
-export const login = (credentials) => async (dispatch) => {
+export const login = (credentials) => async () => {
     try {
         const response = await fetch("http://localhost:3001/api/v1/user/login", {
             method: "POST",
@@ -41,12 +40,12 @@ export const login = (credentials) => async (dispatch) => {
             // Récupérer les informations utilisateur
             const userProfile = await fetchUserProfile(token);
 
-            // Dispatcher les informations utilisateur
-            dispatch(loginSuccess(userProfile));
+            return userProfile; // Je retourne les informations utilisateur
         } else {
             throw new Error("Incorrect email/password");
         }
     } catch (error) {
         console.error("Failed to login:", error);
+        throw error;
     }
 };

@@ -6,7 +6,51 @@ info:
 servers:
   - url: http://localhost:3001/api/v1
 paths:
-  /transactions:
+  /user/login:
+    post:
+      tags:
+        - Utilisateur
+      summary: Connexion
+      description: Connexion d'un utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: Connexion réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Champs invalides
+        '500':
+          description: Erreur interne du serveur
+
+  /user/profile:
+    get:
+      security:
+        - BearerAuth: []
+      tags:
+        - Utilisateur
+      summary: Profil de l'utilisateur
+      description: Récupérer les informations du profil de l'utilisateur connecté
+      responses:
+        '200':
+          description: Profil utilisateur récupéré avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          description: Non autorisé
+        '500':
+          description: Erreur interne du serveur
+
+  /user/transactions:
     get:
       security:
         - BearerAuth: [] 
@@ -61,7 +105,7 @@ paths:
         '500':
           description: Erreur interne du serveur
 
-  /transactions/{id}:
+  /usertransactions/{id}:
     get:
       security:
         - BearerAuth: []
@@ -163,6 +207,12 @@ components:
         description:
           type: string
           description: Description de la transaction
+      required:
+        - id
+        - accountId
+        - date
+        - amount
+        - description
 
     TransactionCreate:
       type: object
@@ -189,6 +239,10 @@ components:
     TransactionUpdate:
       type: object
       properties:
+        date:
+          type: string
+          format: date
+          description: Date de la transaction (format JJ-MM-YYYY)
         amount:
           type: number
           description: Montant de la transaction
@@ -196,10 +250,48 @@ components:
           type: string
           description: Description de la transaction
       required:
+        - date
         - amount
         - description
+
+    UserProfile:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Nom d'utilisateur
+        email:
+          type: string
+          format: email
+          description: Adresse email de l'utilisateur
+      required:
+        - username
+        - email
+
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: Adresse email de l'utilisateur
+        password:
+          type: string
+          format: password
+          description: Mot de passe de l'utilisateur
+      required:
+        - email
+        - password
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Jeton d'authentification JWT
 
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
+      bearerFormat: JWT
